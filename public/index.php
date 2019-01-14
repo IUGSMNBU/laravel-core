@@ -9,52 +9,23 @@
 
 define('LARAVEL_START', microtime(true));
 
-/*
-|--------------------------------------------------------------------------
-| Register The Auto Loader
-|--------------------------------------------------------------------------
-|
-| Composer provides a convenient, automatically generated class loader for
-| our application. We just need to utilize it! We'll simply require it
-| into the script here so that we don't have to worry about manual
-| loading any of our classes later on. It feels great to relax.
-|
-*/
 
 require __DIR__.'/../vendor/autoload.php';
 
-/*
-|--------------------------------------------------------------------------
-| Turn On The Lights
-|--------------------------------------------------------------------------
-|
-| We need to illuminate PHP development, so let us turn on the lights.
-| This bootstraps the framework and gets it ready for use, then it
-| will load up this application so that we can run it and send
-| the responses back to the browser and delight our users.
-|
-*/
 
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
-/*
-|--------------------------------------------------------------------------
-| Run The Application
-|--------------------------------------------------------------------------
-|
-| Once we have the application, we can handle the incoming request
-| through the kernel, and send the associated response back to
-| the client's browser allowing them to enjoy the creative
-| and wonderful application we have prepared for them.
-|
-*/
 
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
-
 $response = $kernel->handle(
     $request = Illuminate\Http\Request::capture()
+    //这句是laravel通过全局$_SERVER数组构造一个Http请求的语句，接下来会调用Http的内核函数handle：
 );
 
 $response->send();
 
 $kernel->terminate($request, $response);
+//第一句就是我们前面博客说的composer的自动加载，
+//接下来第二句获取laravel核心的Ioc容器，
+//第三句“制造”出Http请求的内核，
+//第四句是我们这里的关键，这句牵扯很大，laravel里面所有功能服务的注册加载，乃至Http请求的构造与传递都是这一句的功劳。
